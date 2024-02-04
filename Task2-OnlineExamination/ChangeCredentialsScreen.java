@@ -1,0 +1,74 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+
+import javax.swing.*;
+
+public class ChangeCredentialsScreen extends JFrame implements ActionListener {
+
+    private static final long serialVersionUID = 1L;
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+    private JButton saveButton;
+
+    public ChangeCredentialsScreen() {
+        setTitle("Change Username and Password");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(400, 200);
+        setLocationRelativeTo(null);
+        setIconImage(Toolkit.getDefaultToolkit().getImage(ChangeCredentialsScreen.class.getResource("icon.jpg"))); // Change the icon
+
+        JPanel fieldsPanel = new JPanel(new GridLayout(2, 2));
+        fieldsPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel usernameLabel = new JLabel("New Username:");
+        usernameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        usernameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        fieldsPanel.add(usernameLabel);
+
+        usernameField = new JTextField();
+        usernameField.setFont(new Font("Arial", Font.PLAIN, 16));
+        fieldsPanel.add(usernameField);
+
+        JLabel passwordLabel = new JLabel("New Password:");
+        passwordLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        passwordLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        fieldsPanel.add(passwordLabel);
+
+        passwordField = new JPasswordField();
+        passwordField.setFont(new Font("Arial", Font.PLAIN, 16));
+        fieldsPanel.add(passwordField);
+
+        JPanel savePanel = new JPanel(new GridLayout(1, 1));
+        savePanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        saveButton = new JButton("Save");
+        saveButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        saveButton.addActionListener(this);
+        savePanel.add(saveButton);
+
+        add(fieldsPanel, BorderLayout.CENTER);
+        add(savePanel, BorderLayout.SOUTH);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == saveButton) {
+            String newUsername = usernameField.getText();
+            String newPassword = new String(passwordField.getPassword());
+
+            try {
+                PrintWriter writer = new PrintWriter(new File(LoginScreen.class.getResource("/com/examprj/credentials.txt").getPath()));
+                writer.write(newUsername + "\n");
+                writer.write(newPassword + "\n");
+                writer.close();
+                JOptionPane.showMessageDialog(this, "Credentials saved successfully.");
+                dispose();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error: Could not save credentials.");
+                ex.printStackTrace();
+            }
+        }
+    }
+
+}
+
